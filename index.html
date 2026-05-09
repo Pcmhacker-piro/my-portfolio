@@ -1103,65 +1103,40 @@ window.addEventListener('scroll',()=>document.getElementById('btt').classList.to
 // 3. Create Email Template with these variables:
 //    {{from_name}}, {{from_email}}, {{contact_type}}, {{company}}, {{message}}
 // 4. Replace the 3 strings below with your actual IDs from EmailJS dashboard
-const EJ_SERVICE  = 'YOUR_SERVICE_ID';   // e.g. 'service_abc123'
-const EJ_TEMPLATE = 'YOUR_TEMPLATE_ID';  // e.g. 'template_xyz456'
+// const EJ_SERVICE  = 'YOUR_SERVICE_ID';   // e.g. 'service_abc123'
+// const EJ_TEMPLATE = 'YOUR_TEMPLATE_ID';  // e.g. 'template_xyz456'
 // Public key is already set in the <head> init above
  
+
 function sendEmail(e) {
   e.preventDefault();
   const btn  = document.getElementById('ct-send-btn');
   const note = document.getElementById('ct-note');
- 
+
   const name    = document.getElementById('cf_name').value.trim();
   const email   = document.getElementById('cf_email').value.trim();
   const type    = document.getElementById('cf_type').value;
   const company = document.getElementById('cf_company').value.trim() || 'Not specified';
   const message = document.getElementById('cf_message').value.trim();
- 
-  // Loading state
-  btn.classList.add('sending');
-  btn.querySelector('span').textContent = 'Sending...';
-  note.textContent = 'Delivering your message...';
- 
-  emailjs.send(EJ_SERVICE, EJ_TEMPLATE, {
-    from_name:    name,
-    from_email:   email,
-    contact_type: type,
-    company:      company,
-    message:      message,
-    to_name:      'Prakash',
-  }).then(() => {
-    // Success
-    btn.classList.remove('sending');
-    btn.classList.add('success');
-    btn.innerHTML = '<span>Message Sent ✓</span>';
-    note.textContent = 'Got it! I\'ll reply within 24 hours.';
-    note.style.color = 'var(--green)';
-    document.getElementById('contactForm').reset();
-    setTimeout(() => {
-      btn.classList.remove('success');
-      btn.innerHTML = '<span>Send Message</span><span class="ct-send-icon">→</span>';
-      note.textContent = 'Delivered directly to pcmeena511@gmail.com';
-      note.style.color = '';
-    }, 5000);
-  }, (err) => {
-    // Error — fallback to mailto
-    btn.classList.remove('sending');
-    btn.classList.add('error');
-    btn.querySelector('span').textContent = 'Try via Email ↗';
-    note.textContent = 'EmailJS not configured yet — clicking will open your mail app.';
-    note.style.color = '#f87171';
-    // Fallback mailto
-    const sub  = encodeURIComponent(`[Portfolio] ${type} — ${name}`);
-    const body = encodeURIComponent(`Hi Prakash,\n\nName: ${name}\nEmail: ${email}\nAbout: ${type}\nCompany: ${company}\n\nMessage:\n${message}\n\n— Sent via portfolio`);
-    setTimeout(() => { window.location.href = `mailto:pcmeena511@gmail.com?subject=${sub}&body=${body}`; }, 400);
-    setTimeout(() => {
-      btn.classList.remove('error');
-      btn.innerHTML = '<span>Send Message</span><span class="ct-send-icon">→</span>';
-      note.textContent = 'Delivered directly to pcmeena511@gmail.com';
-      note.style.color = '';
-    }, 6000);
-  });
+
+  const sub  = encodeURIComponent(`[Portfolio] ${type} — ${name}`);
+  const body = encodeURIComponent(`Hi Prakash,\n\nName: ${name}\nEmail: ${email}\nAbout: ${type}\nCompany: ${company}\n\nMessage:\n${message}\n\n— Sent via portfolio`);
+
+  window.location.href = `mailto:pcmeena511@gmail.com?subject=${sub}&body=${body}`;
+
+  // Show success state
+  btn.classList.add('success');
+  btn.innerHTML = '<span>Message Sent ✓</span>';
+  note.textContent = "Your mail app will open — just hit Send!";
+  note.style.color = 'var(--green)';
+  document.getElementById('contactForm').reset();
+
+  setTimeout(() => {
+    btn.classList.remove('success');
+    btn.innerHTML = '<span>Send Message</span><span class="ct-send-icon">→</span>';
+    note.textContent = 'Delivered directly to pcmeena511@gmail.com';
+    note.style.color = '';
+  }, 5000);
 }
 </script>
 </body>
